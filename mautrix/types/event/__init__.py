@@ -11,6 +11,7 @@ from .account_data import (
 )
 from .base import BaseEvent, BaseRoomEvent, BaseUnsigned, GenericEvent
 from .encrypted import (
+    BatchSendEncryptedEvent,
     EncryptedEvent,
     EncryptedEventContent,
     EncryptedMegolmEventContent,
@@ -38,6 +39,7 @@ from .message import (
     BaseFileInfo,
     BaseMessageEventContent,
     BaseMessageEventContentFuncs,
+    BatchSendMessageEvent,
     EncryptedFile,
     FileInfo,
     Format,
@@ -61,6 +63,7 @@ from .message import (
 from .reaction import ReactionEvent, ReactionEventContent
 from .redaction import RedactionEvent, RedactionEventContent
 from .state import (
+    BatchSendStateEvent,
     CanonicalAliasStateEventContent,
     JoinRule,
     JoinRulesStateEventContent,

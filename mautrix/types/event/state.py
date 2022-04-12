@@ -10,7 +10,7 @@ import attr
 
 from ..primitive import JSON, ContentURI, EventID, RoomAlias, RoomID, UserID
 from ..util import Obj, SerializableAttrs, SerializableEnum, deserializer, field
-from .base import BaseRoomEvent, BaseUnsigned
+from .base import BaseBatchSendEvent, BaseRoomEvent, BaseUnsigned
 from .encrypted import EncryptionAlgorithm
 from .type import EventType, RoomType
 
@@ -254,6 +254,17 @@ class StrippedStateEvent(SerializableAttrs):
         except ValueError:
             pass
         return super().deserialize(data)
+
+
+@dataclass
+class BatchSendStateEvent(BaseBatchSendEvent, SerializableAttrs):
+    """
+    State events to be used as initial state events on batch send events. These never need to be
+    deserialized.
+    """
+
+    content: StateEventContent
+    state_key: Optional[str] = None
 
 
 @dataclass

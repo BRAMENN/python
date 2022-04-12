@@ -11,7 +11,7 @@ import attr
 
 from ..primitive import JSON, DeviceID, IdentityKey, SessionID
 from ..util import ExtensibleEnum, Obj, Serializable, SerializableAttrs, deserializer
-from .base import BaseRoomEvent, BaseUnsigned
+from .base import BaseBatchSendEvent, BaseRoomEvent, BaseUnsigned
 from .message import RelatesTo
 
 
@@ -94,6 +94,24 @@ setattr(EncryptedEventContent, "deserialize", deserialize_encrypted)
 @dataclass
 class EncryptedEvent(BaseRoomEvent, SerializableAttrs):
     """A m.room.encrypted event"""
+
+    content: EncryptedEventContent
+    _unsigned: Optional[BaseUnsigned] = attr.ib(default=None, metadata={"json": "unsigned"})
+
+    @property
+    def unsigned(self) -> BaseUnsigned:
+        if not self._unsigned:
+            self._unsigned = BaseUnsigned()
+        return self._unsigned
+
+    @unsigned.setter
+    def unsigned(self, value: BaseUnsigned) -> None:
+        self._unsigned = value
+
+
+@dataclass
+class BatchSendEncryptedEvent(BaseBatchSendEvent, SerializableAttrs):
+    """An m.room.encrypted event for sending in a batch."""
 
     content: EncryptedEventContent
     _unsigned: Optional[BaseUnsigned] = attr.ib(default=None, metadata={"json": "unsigned"})

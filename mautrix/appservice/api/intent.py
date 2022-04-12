@@ -21,7 +21,10 @@ from mautrix.errors import (
 from mautrix.types import (
     JSON,
     BatchID,
+    BatchSendEncryptedEvent,
+    BatchSendMessageEvent,
     BatchSendResponse,
+    BatchSendStateEvent,
     ContentURI,
     EventContent,
     EventID,
@@ -30,7 +33,6 @@ from mautrix.types import (
     JoinRulesStateEventContent,
     Member,
     Membership,
-    MessageEvent,
     PowerLevelStateEventContent,
     PresenceState,
     RoomAvatarStateEventContent,
@@ -38,7 +40,6 @@ from mautrix.types import (
     RoomNameStateEventContent,
     RoomPinnedEventsStateEventContent,
     RoomTopicStateEventContent,
-    StateEvent,
     StateEventContent,
     UserID,
 )
@@ -435,8 +436,8 @@ class IntentAPI(StoreUpdatingAPI):
         prev_event_id: EventID,
         *,
         batch_id: BatchID | None = None,
-        events: Iterable[MessageEvent],
-        state_events_at_start: Iterable[StateEvent] = None,
+        events: Iterable[BatchSendMessageEvent | BatchSendEncryptedEvent],
+        state_events_at_start: Iterable[BatchSendStateEvent] = (),
     ) -> BatchSendResponse:
         """
         Send a batch of historical events into a room. See `MSC2716`_ for more info.
@@ -459,7 +460,7 @@ class IntentAPI(StoreUpdatingAPI):
             All the event IDs generated, plus a batch ID that can be passed back to this method.
         """
         path = Path.unstable["org.matrix.msc2716"].rooms[room_id].batch_send
-        query = {"prev_event_id": prev_event_id}
+        query: JSON = {"prev_event_id": prev_event_id}
         if batch_id:
             query["batch_id"] = batch_id
         resp = await self.api.request(

@@ -29,6 +29,14 @@ class BaseEvent:
 
 
 @dataclass
+class BaseBatchSendEvent(BaseEvent, SerializableAttrs):
+    """Base event class for events sent via a batch send request."""
+
+    sender: UserID
+    timestamp: int = attr.ib(metadata={"json": "origin_server_ts"})
+
+
+@dataclass
 class BaseRoomEvent(BaseEvent):
     """Base room event class. Room events must have a room ID, event ID, sender and timestamp in
     addition to the content and type in the base event."""
